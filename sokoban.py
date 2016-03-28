@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 import copy
 from sys import exit
 from itertools import chain
