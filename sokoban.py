@@ -161,7 +161,7 @@ def main(level_name):
 
     if has_won(history[-1][1]):
         print 'You won !'
-        print 'You have used %s move' % len(history) -1
+        print 'You have used %s move' % (len(history) -1)
         print 'Moves :', ''.join([h[0] for h in history[1:]])
         if undo:
             print 'And %s' % undo
