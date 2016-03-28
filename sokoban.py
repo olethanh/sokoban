@@ -96,6 +96,29 @@ def move(level, dx, dy):
     return level
 
 
+def backtrack(history):
+    """Really slow non optimal sokoban resolver"""
+    # print ''.join([c for (c,l) in history])
+    cmd, level = history[-1]
+    if has_won(level):
+        return history
+
+    if level in (l for (c,l) in history[:-1]):
+        # Already explored
+        return None
+
+    for c, (dx, dy) in MOVES.items():
+        r = move(level, dx, dy)
+        if r:
+            history.append((c,r))
+            # h =  backtrack(history + [(c,r)])
+            h =  backtrack(history)
+            if h:
+                return h
+            history.pop()
+    return None
+
+
 def main(level_name):
     history = [('init', load_level(level_name))]
     undo = 0
@@ -117,6 +140,11 @@ def main(level_name):
         elif cmd == 'h':
             print 'printing history'
             print_history(history)
+            continue
+        elif cmd == 'b':
+            soluce = backtrack([('i', history[-1][1])])
+            if soluce:
+                print_history(soluce)
             continue
         elif cmd == 'u':
             print ' ====  Undoing last move.'

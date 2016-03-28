@@ -126,6 +126,26 @@ p.
     sokoban.print_level(after)
     assert move(before, 0, -1) == after
 
+def test_backtrack():
+   init = load_from_string("""
+        ########
+        ###p   #
+        ##. c  #
+        ########
+    """)
+   res = sokoban.backtrack([('i', init)])
+   assert isinstance(res, list)
+   assert len(res) <= 12 # initial result not very optimised
+
+def test_backtrack_uninishable():
+   init = load_from_string("""
+        #####
+        #cp.#
+        #   #
+        #####
+    """)
+   res = sokoban.backtrack([('i', init)])
+   assert res is None
 
 def test_crash():
     before = load_from_string("""
