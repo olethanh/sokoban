@@ -36,6 +36,11 @@ def print_level(level):
     for line in level:
         print ''.join(line)
 
+def print_history(history):
+    for cmd, level in history:
+        print_level(level)
+        raw_input('press enter to continue')
+
 
 def is_free(level, x, y):
     return level[x][y] in (OBJECTIVE, FREE)
@@ -101,6 +106,10 @@ def main():
             dx, dy = (1, 0)
         elif cmd == 'w':
             dx, dy = (0, -1)
+        elif cmd == 'h':
+            print 'printing history'
+            print_history(history)
+            continue
         elif cmd == 'u':
             print ' ====  Undoing last move.'
             if len(history) > 1:
