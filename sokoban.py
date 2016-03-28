@@ -95,8 +95,9 @@ def move(level, dx, dy):
         level[x][y] = PLAYER
     return level
 
-def main():
-    history = [('init', load_level('level01'))]
+
+def main(level_name):
+    history = [('init', load_level(level_name))]
     undo = 0
     while not has_won(history[-1][1]):
         print_level(history[-1][1])
@@ -138,4 +139,6 @@ def main():
             print 'And %s' % undo
 
 if __name__ == '__main__':
-    main()
+    import sys
+    level = sys.argv[1] if len(sys.argv) > 1 else 'level00'
+    main(level)
