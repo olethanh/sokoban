@@ -87,7 +87,6 @@ def main():
     undo = 0
     while not has_won(history[-1][1]):
         print_level(history[-1][1])
-        print `len(history)`
         print 'Move done', len(history) -1
         print 
         print 'Enter your move (N, E, S, W), u to undo or q to exit'
@@ -123,6 +122,7 @@ def main():
     if has_won(history[-1][1]):
         print 'You won !'
         print 'You have used %s move' % len(history) -1
+        print 'Moves :', ''.join([h[0] for h in history[1:]])
         if undo:
             print 'And %s' % undo
 
