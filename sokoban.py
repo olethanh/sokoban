@@ -83,10 +83,11 @@ def move(level, dx, dy):
     return level
 
 def main():
-    history = [load_level('level')]
+    history = [('init', load_level('level01'))]
     undo = 0
-    while not has_won(history[-1]):
-        print_level(history[-1])
+    while not has_won(history[-1][1]):
+        print_level(history[-1][1])
+        print `len(history)`
         print 'Move done', len(history) -1
         print 
         print 'Enter your move (N, E, S, W), u to undo or q to exit'
@@ -105,7 +106,6 @@ def main():
             print ' ====  Undoing last move.'
             if len(history) > 1:
                 history.pop()
-                level = history[-1]
                 undo += 1
             else:
                 print 'Initial level'
@@ -114,13 +114,13 @@ def main():
             print ' ==== Unkown command'
             continue
 
-        r =  move(history[-1], dx, dy)
+        r =  move(history[-1][1], dx, dy)
         if r is False:
             print '!!!! Invalid move'
         else:
-            history.append(level)
+            history.append((cmd, r))
 
-    if has_won(history[-1]):
+    if has_won(history[-1][1]):
         print 'You won !'
         print 'You have used %s move' % len(history) -1
         if undo:
