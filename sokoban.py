@@ -4,7 +4,6 @@ from itertools import chain
 # Sokoban player
 
 # Design inspired by stop writing class presentation
-# x is top to bottom, y is left to right
 
 # level are defined in a file, in a "self evident" format where each char is a case
 # on the map and are  represented by one of the following symbole
@@ -16,6 +15,13 @@ WALL = '#'
 PLAYER = 'p'
 PLAYER_ON_OBJECTIVE = 'd'
 
+# x is top to bottom, y is left to right
+MOVES = {
+    'n': (-1, 0),
+    'e': (0, 1),
+    's': (1, 0),
+    'w': (0, -1),
+}
 
 def load_level(fname):
     """Load a level from a properly formated file, return a matrix
@@ -98,14 +104,13 @@ def main():
         cmd = raw_input('? ').lower()
         if cmd  == 'q':
             exit()
-        elif cmd == 'n':
-            dx, dy = (-1, 0)
-        elif cmd == 'e':
-            dx, dy = (0, 1)
-        elif cmd == 's':
-            dx, dy = (1, 0)
-        elif cmd == 'w':
-            dx, dy = (0, -1)
+        elif cmd in MOVES.keys():
+            dx, dy = MOVES[cmd]
+            r =  move(history[-1][1], dx, dy)
+            if r is False:
+                print '!!!! Invalid move'
+            else:
+                history.append((cmd, r))
         elif cmd == 'h':
             print 'printing history'
             print_history(history)
@@ -122,11 +127,6 @@ def main():
             print ' ==== Unkown command'
             continue
 
-        r =  move(history[-1][1], dx, dy)
-        if r is False:
-            print '!!!! Invalid move'
-        else:
-            history.append((cmd, r))
 
     if has_won(history[-1][1]):
         print 'You won !'
