@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 import Tkinter as tk
 import sokoban as sk
 from sys import exit
@@ -6,7 +8,7 @@ from PIL import Image, ImageTk
 # will determine the size of the display
 ICON_SIZE = 100
 PAD = 3
-CASE = ICON_SIZE+PAD
+CASE = ICON_SIZE + PAD
 
 def box(i,j):
     x1 = j * CASE
@@ -30,7 +32,7 @@ COLORS = {
     sk.PLAYER_ON_OBJECTIVE: 'lightblue',
 }
 
-# lets be a bit more natural with moves
+# lets be a bit more natural with keys
 MOVES = {
     'w': (-1, 0),
     'd': (0, 1),
@@ -39,24 +41,32 @@ MOVES = {
 }
 
 class App(tk.Tk):
-    def __init__(self, level):
+    def __init__(self, level_name):
         tk.Tk.__init__(self)
 
+        # set up game
+        level = sk.load_level(level_name)
+        self.history = [('init', level)]
+        self.undo = 0
+
         # set up tk widgets
-        row = len(level)
-        col = len(level[0])
-        self.width= col * CASE
-        self.height = row * CASE
         frame = tk.Frame(self)
         frame.pack()
 
         self.score_label = tk.Label(frame, text= "Welcome!")
         self.score_label.pack()
 
+        row = len(level)
+        col = len(level[0])
+        self.width= col * CASE
+        self.height = row * CASE
+
         c = tk.Canvas(frame, width=self.width, height=self.height, background='lightgrey')
         c.pack()
         c.focus_set()
         c.bind("<Key>", self.key_press)
+        self.c = c
+
         wframe = tk.Frame(frame)
         wframe.pack()
         label = tk.Label(wframe, text=
@@ -67,14 +77,7 @@ class App(tk.Tk):
         self.undo_button = tk.Button(wframe, text='Undo', command=self.do_undo)
         self.undo_button.pack(side=tk.RIGHT)
 
-        self.c = c
-
-        # set up game
-        self.history = [('init', level)]
-        self.undo = 0
-
         # set up img display
-
         img_size = (int(ICON_SIZE * 0.95),int(ICON_SIZE *0.95))
 
         player_image = Image.open("res/people-delivery.png").resize(img_size)
@@ -82,7 +85,6 @@ class App(tk.Tk):
         objective_image = Image.open("res/unknown.png").convert("RGBA").resize(img_size)
         objective_player_image = Image.blend(player_image, objective_image, 0.20)
         objective_crate_image = Image.blend(crate_image, objective_image, 0.20)
-
 
         self.IMAGES = {
             sk.PLAYER: ImageTk.PhotoImage(player_image),
@@ -133,7 +135,6 @@ class App(tk.Tk):
         self.display()
 
     def key_press(self, event):
-        #print "pressed", repr(event.char)
         cmd = event.char
         history = self.history
 
@@ -159,6 +160,5 @@ class App(tk.Tk):
 if __name__ == '__main__':
     import sys
     level = sys.argv[1] if len(sys.argv) > 1 else 'level00'
-    level = sk.load_level(level)
     app = App(level)
     app.mainloop()
