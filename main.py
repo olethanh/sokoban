@@ -148,19 +148,19 @@ class App(tk.Tk):
 
         if cmd  == 'q':
             exit()
+        elif cmd == 'n':
+            self.load_next_level()
 
-        if sk.has_won(history[-1][1]):
-            return
 
         elif cmd in MOVES.keys():
+            if sk.has_won(history[-1][1]):
+                return
             dx, dy = MOVES[cmd]
             r =  sk.move(history[-1][1], dx, dy)
             if r is False:
                 print '!!!! Invalid move'
             else:
                 history.append((cmd, r))
-        elif cmd == 'n':
-            self.load_next_level()
         elif cmd == 'u':
             self.do_undo()
         else:
