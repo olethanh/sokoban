@@ -169,5 +169,5 @@ def main(level_name):
 
 if __name__ == '__main__':
     import sys
-    level = sys.argv[1] if len(sys.argv) > 1 else 'level00'
+    level = sys.argv[1] if len(sys.argv) > 1 else 'level00.sok'
     main(level)
