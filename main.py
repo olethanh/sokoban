@@ -169,6 +169,6 @@ class App(tk.Tk):
 
 if __name__ == '__main__':
     import sys, glob
-    levels = sys.argv[1:] if len(sys.argv) > 1 else glob.glob('*.sok')
+    levels = sys.argv[1:] if len(sys.argv) > 1 else sorted(glob.glob('*.sok'))
     app = App(levels)
     app.mainloop()
