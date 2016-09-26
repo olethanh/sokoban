@@ -3,16 +3,16 @@ import sokoban
 
 WON_LEVEL = """
 ##########
-####p   ##
+####@   ##
 ##       #
 ##    ####
-##oo #####
+##** #####
 ##########
 """
 INIT_LEVEL = """
 ##########
-####p   ##
-##  cc   #
+####@   ##
+##  $$   #
 ##    ####
 ##.. #####
 ##########
@@ -21,8 +21,8 @@ INIT_LEVEL = """
 
 MOVE = """
 ##########
-####  p ##
-##  cc   #
+####  @ ##
+##  $$   #
 ##    ####
 ##.. #####
 ##########
@@ -54,8 +54,8 @@ def test_move_ok():
 def test_move_CRATE():
     l = load_from_string( """
 ##########
-####p   ##
-##  cc   #
+####@   ##
+##  $$   #
 ##    ####
 ##.. #####
 ##########
@@ -63,8 +63,8 @@ def test_move_CRATE():
     after = load_from_string("""
 ##########
 ####    ##
-##  pc   #
-##  c ####
+##  @$   #
+##  $ ####
 ##.. #####
 ##########
 """)
@@ -76,7 +76,7 @@ def test_move_TWO_CRATE():
     before = load_from_string( """
 ##########
 ####    ##
-##  ccp  #
+##  $$@  #
 ##    ####
 ##.. #####
 ##########
@@ -87,17 +87,17 @@ def test_move_CRATE_obj():
     before = load_from_string( """
 ##########
 ####    ##
-## p c   #
-## c  ####
+## @ $   #
+## $  ####
 ##.. #####
 ##########
 """)
     after = load_from_string("""
 ##########
 ####    ##
-##   c   #
-## p  ####
-##.o #####
+##   $   #
+## @  ####
+##.* #####
 ##########
 """)
     sokoban.print_level(move(before, 1, 0))
@@ -106,10 +106,10 @@ def test_move_CRATE_obj():
 
 def test_move_PLAYER_OBJ():
     before = load_from_string( """
-p.
+@.
 """)
     after = load_from_string("""
- d
+ +
 """)
     sokoban.print_level(move(before, 0, 1))
     sokoban.print_level(after)
@@ -117,10 +117,10 @@ p.
 
 def test_move_PLAYER_OUT_OBJ():
     before = load_from_string( """
- d
+ +
 """)
     after = load_from_string("""
-p.
+@.
 """)
     sokoban.print_level(move(before, 0, -1))
     sokoban.print_level(after)
@@ -129,8 +129,8 @@ p.
 def test_backtrack():
    init = load_from_string("""
         ########
-        ###p   #
-        ##. c  #
+        ###@   #
+        ##. $  #
         ########
     """)
    res = sokoban.backtrack([('i', init)])
@@ -140,7 +140,7 @@ def test_backtrack():
 def test_backtrack_uninishable():
    init = load_from_string("""
         #####
-        #cp.#
+        #$@.#
         #   #
         #####
     """)
@@ -151,17 +151,17 @@ def test_crash():
     before = load_from_string("""
         ##########
         ####    ##
-        ##    cp #
+        ##    $@ #
         ##    ####
-        ##o. #####
+        ##*. #####
         ##########
     """)
     after = load_from_string("""
         ##########
         ####    ##
-        ##   cp  #
+        ##   $@  #
         ##    ####
-        ##o. #####
+        ##*. #####
         ##########
     """)
     sokoban.print_level(move(before, 0, -1))

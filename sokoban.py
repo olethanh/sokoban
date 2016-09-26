@@ -9,13 +9,14 @@ from itertools import chain
 
 # level are defined in a file, in a "self evident" format where each char is a case
 # on the map and are  represented by one of the following symbole
+# using this format http://sokobano.de/wiki/index.php?title=Level_format
 FREE = ' ' # free space
-CRATE = 'c'
+CRATE = '$'
 OBJECTIVE = '.'
-CRATE_ON_OBJECTIVE = 'o'
+CRATE_ON_OBJECTIVE = '*'
 WALL = '#'
-PLAYER = 'p'
-PLAYER_ON_OBJECTIVE = 'd'
+PLAYER = '@'
+PLAYER_ON_OBJECTIVE = '+'
 
 # x is top to bottom, y is left to right
 MOVES = {
