@@ -30,7 +30,7 @@ def load_level(fname):
 
     Assume a proper level file, like not two player"""
     lines = open(fname).readlines()
-    lines = [list(l.strip('\n')) for l in lines]
+    lines = [list(l.strip('\n')) for l in lines if not l.startswith(';')]
     return lines
 
 def get_player_pos(level):
