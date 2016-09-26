@@ -4,6 +4,7 @@ import Tkinter as tk
 import sokoban as sk
 from sys import exit
 from PIL import Image, ImageTk
+from itertools import cycle
 
 # will determine the size of the display
 ICON_SIZE = 100
@@ -41,13 +42,12 @@ MOVES = {
 }
 
 class App(tk.Tk):
-    def __init__(self, level_name):
-        tk.Tk.__init__(self)
+    help_text = """Push the boxes on the white cases to win
+    Enter your move (W, S, A, D), u to undo or q to exit """
 
-        # set up game
-        level = sk.load_level(level_name)
-        self.history = [('init', level)]
-        self.undo = 0
+    def __init__(self, level_names):
+        tk.Tk.__init__(self)
+        self.level_names = cycle(level_names)
 
         # set up tk widgets
         frame = tk.Frame(self)
@@ -56,12 +56,7 @@ class App(tk.Tk):
         self.score_label = tk.Label(frame, text= "Welcome!")
         self.score_label.pack()
 
-        row = len(level)
-        col = len(level[0])
-        self.width= col * CASE
-        self.height = row * CASE
-
-        c = tk.Canvas(frame, width=self.width, height=self.height, background='lightgrey')
+        c = tk.Canvas(frame, background='lightgrey')
         c.pack()
         c.focus_set()
         c.bind("<Key>", self.key_press)
@@ -69,10 +64,8 @@ class App(tk.Tk):
 
         wframe = tk.Frame(frame)
         wframe.pack()
-        label = tk.Label(wframe, text=
-                         'Push the boxes on the white cases to win.\n'
-                         'Enter your move (W, S, A, D), u to undo or q to exit ')
-        label.pack(side=tk.LEFT)
+        self.help = tk.Label(wframe, text= self.help_text)
+        self.help.pack(side=tk.LEFT)
 
         self.undo_button = tk.Button(wframe, text='Undo', command=self.do_undo)
         self.undo_button.pack(side=tk.RIGHT)
@@ -94,8 +87,22 @@ class App(tk.Tk):
             sk.PLAYER_ON_OBJECTIVE: ImageTk.PhotoImage(objective_player_image),
         }
 
-
+        self.load_next_level()
         self.display()
+
+    def load_next_level(self):
+        level_name = self.level_names.next()
+        level = sk.load_level(level_name)
+        self.history = [('init', level)]
+        self.undo = 0
+
+        row = len(level)
+        col = len(level[0])
+        self.width= col * CASE
+        self.height = row * CASE
+
+        self.c.config(width=self.width, height=self.height)
+        self.help.config(text=self.help_text)
 
 
     def display(self):
@@ -117,6 +124,7 @@ class App(tk.Tk):
                                text="You have won!", fill='red',
                               font=("Purisa Bold", 55))
             self.undo_button.config(state = tk.DISABLED)
+            self.help.config(text="Press n for next level, q to quit")
 
         text = '{0} moves done'.format(len(self.history) -1) if self.history > 1\
                 else '1 move done'
@@ -151,6 +159,8 @@ class App(tk.Tk):
                 print '!!!! Invalid move'
             else:
                 history.append((cmd, r))
+        elif cmd == 'n':
+            self.load_next_level()
         elif cmd == 'u':
             self.do_undo()
         else:
@@ -158,7 +168,7 @@ class App(tk.Tk):
         self.display()
 
 if __name__ == '__main__':
-    import sys
-    level = sys.argv[1] if len(sys.argv) > 1 else 'level00'
-    app = App(level)
+    import sys, glob
+    levels = sys.argv[1:] if len(sys.argv) > 1 else glob.glob('level*')
+    app = App(levels)
     app.mainloop()
